@@ -1,0 +1,310 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Automated Quantification of Fibrin Clot Microstructure Using SEM Image Analysis | Jordan Christopher Lyles</title><meta name="author" content="Jordan Christopher Lyles"><meta name="description" content="Technical publication by Jordan Christopher Lyles on automated SEM image analysis, DiameterJ, ImageJ, MATLAB, and statistical validation of fibrin clot microstructure."><style>
+@page { size: Letter; margin: 0.48in 0.48in 0.58in 0.48in; @bottom-center { content: "Jordan Christopher Lyles | Fibrin Clot SEM Image Analysis | " counter(page); font-size: 8pt; color: #64748b; } }
+* { box-sizing:border-box; }
+html { scroll-behavior:smooth; }
+body { margin:0; font-family: Arial, Helvetica, sans-serif; color:#172033; background:#fff; line-height:1.40; font-size:10.15pt; }
+.hero { background:linear-gradient(135deg,#06162a 0%, #103052 58%, #1b7896 100%); color:white; padding:42px 44px 34px; }
+.hero-inner { max-width:1120px; margin:0 auto; }
+.kicker { text-transform:uppercase; letter-spacing:.12em; color:#bde3f2; font-size:8.8pt; margin:0 0 12px; }
+h1 { font-size:26pt; line-height:1.04; margin:0 0 10px; letter-spacing:-.025em; max-width:980px; }
+.hero h2 { color:#eaf7ff; font-size:13.5pt; font-weight:500; margin:0 0 10px; border:0; padding:0; }
+.meta { color:#d7eef8; font-size:9.4pt; margin:10px 0 20px; }
+.affiliation { color:#eaf7ff; font-size:9.2pt; margin:-10px 0 22px; }
+.hero-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:10px; }
+.hero-grid div { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.24); border-radius:12px; padding:11px; min-height:72px; overflow:hidden; }
+.hero-grid b { display:block; font-size:9.8pt; color:#fff; margin-bottom:3px; }
+.hero-grid span { display:block; font-size:7.9pt; color:#d6eff7; line-height:1.25; }
+.toc { background:#fff; border-bottom:1px solid #d8e2ee; padding:8px 24px; text-align:center; }
+.toc a { color:#0a2540; text-decoration:none; font-weight:700; font-size:8.0pt; margin:0 5px; white-space:nowrap; }
+main { max-width:1100px; margin:0 auto; padding:22px 18px 30px; background:#fff; }
+section { margin:0 0 18px; }
+.pagebreak-before { break-before:auto; page-break-before:auto; }
+h2 { font-size:18pt; color:#0a2540; margin:0 0 10px; line-height:1.1; border-bottom:2px solid #d6a33e; padding-bottom:6px; }
+h3 { color:#1d4e89; font-size:13pt; margin:15px 0 7px; }
+p { margin:0 0 8px; }
+.abstract { font-size:10.2pt; }
+.keywords { background:#f5f8fb; border-left:4px solid #d6a33e; padding:10px 13px; border-radius:7px; }
+.callout { background:#eff7fb; border:1px solid #cfe3ee; border-left:5px solid #3a8fb7; padding:11px 13px; border-radius:9px; margin:12px 0; }
+.outcomes { background:#f7fbff; border:1px solid #cfe3ee; border-left:5px solid #1d4e89; padding:12px 14px; border-radius:10px; margin:12px 0 14px; }
+.outcomes b { color:#0a2540; }
+.outcomes ul { margin:6px 0 0 18px; padding:0; }
+.outcomes li { margin:3px 0; }
+figure { margin:12px auto 16px; break-inside:avoid; page-break-inside:avoid; width:100%; }
+figure img { width:100%; height:auto; max-height:9.25in; object-fit:contain; border:1px solid #d9e3ef; border-radius:10px; display:block; }
+/* Larger treatment for wide dashboards/graphics so PDF pages do not look empty */
+figure img[src*="fig01_"], figure img[src*="fig02_"], figure img[src*="fig06_"], figure img[src*="fig07_"], figure img[src*="fig08_"], figure img[src*="fig14_"] { max-height:none; }
+figcaption { font-size:8.0pt; color:#49586a; margin-top:5px; line-height:1.25; }
+table.data { width:100%; border-collapse:collapse; margin:12px 0 16px; font-size:8.2pt; break-inside:avoid; table-layout:fixed; }
+table.data th { background:#0a2540; color:white; text-align:left; padding:6px; border:1px solid #0a2540; }
+table.data td { padding:6px; border:1px solid #cbd5e1; vertical-align:top; overflow-wrap:anywhere; }
+table.data tr:nth-child(even) td { background:#f8fafc; }
+.code { background:#0b1220; color:#e5f2ff; border-radius:10px; padding:13px 15px; font-family:'DejaVu Sans Mono','Consolas',monospace; font-size:7.55pt; line-height:1.27; white-space:pre-wrap; overflow-wrap:anywhere; break-inside:avoid; }
+.refs { font-size:8.2pt; padding-left:18px; }
+.refs li { margin-bottom:6px; }
+footer { background:#07192e; color:#d5e7f3; padding:16px 40px; font-size:8.8pt; text-align:center; }
+@media screen { body { background:#eef3f8; } main { box-shadow:0 0 30px rgba(0,0,0,.08); } }
+@media print { .toc { padding:6px 16px; } main { padding-top:18px; } section { margin-bottom:14px; } }
+@media (max-width:800px) { .hero { padding:34px 24px; } h1 { font-size:22pt; } .hero-grid { grid-template-columns:1fr 1fr; } main { padding:20px 14px; } }
+@media (max-width:520px) { .hero-grid { grid-template-columns:1fr; } .toc { text-align:left; } .toc a { display:inline-block; margin:4px 8px 4px 0; } }
+</style></head><body>
+<header class="hero">
+  <div class="hero-inner">
+    <p class="kicker">Biomedical Engineering • Computer Vision • SEM Image Analysis • Statistical Validation</p>
+    <h1>Automated Quantification of Fibrin Clot Microstructure Using Scanning Electron Microscopy, Computer Vision, and Statistical Validation</h1>
+    <h2>Development and validation of a reproducible image-analysis pipeline</h2>
+    <p class="meta">Jordan Lyles • Jordan Christopher Lyles • Technical Portfolio Publication • 2026</p>
+    <p class="affiliation">B.S. Biomedical Engineering, Purdue University • Biomedical computer vision and SEM image-analysis portfolio publication</p>
+    <div class="hero-grid"><div><b>Dataset</b><span>48 SEM images screened; 16 selected for validation</span></div><div><b>Algorithms</b><span>Mixed, Statistical, and Traditional segmentation families</span></div><div><b>Measures</b><span>Fiber radius, pore area, skeleton topology, branch length</span></div><div><b>Validation</b><span>Manual ImageJ control, MATLAB conversion, ANOVA/Dunnett logic</span></div></div>
+  </div>
+</header>
+<nav class="toc"><a href="#abstract">Abstract</a><a href="#summary">Executive Summary</a><a href="#background">Background</a><a href="#methods">Methods</a><a href="#figures">Figures</a><a href="#results">Results</a><a href="#manual">Manual Analysis</a><a href="#code">Code</a><a href="#appendix">Appendix Gallery</a><a href="#references">References</a></nav>
+<main>
+<section id="abstract" class="abstract">
+  <h2>Abstract</h2>
+  <p>Fibrin clot microstructure strongly influences clot stability, permeability, viscoelastic behavior, and susceptibility to fibrinolysis. Scanning electron microscopy (SEM) can visualize fibrin networks at high resolution, but traditional manual measurement of fiber diameter and pore morphology is slow, operator-dependent, and difficult to scale. This project developed and validated a reproducible image-analysis pipeline for quantifying fibrin clot microstructure from SEM images using ImageJ, DiameterJ, MATLAB, Excel, and Minitab.</p>
+  <p>The workflow compared manual ImageJ measurements against automated segmentations generated from Mixed, Statistical, and Traditional algorithm families. Forty-eight SEM images were screened, and sixteen images were selected based on focus, magnification, contrast, density, and feature visibility. Automated outputs were converted from histogram-frequency files into observation-level datasets using MATLAB so that they could be compared with manual controls using ANOVA and Dunnett-style statistical interpretation. Across the project dataset, Traditional segmentation performed best for fiber radius and tied with Statistical segmentation for pore analysis, making it the strongest overall method in the final interpretation.</p>
+  <p>This public version presents the project as a non-proprietary biomedical computer vision framework. It uses the actual images, exported data, and code provided by the author while removing company-specific and product-specific context. The updated publication adds expanded methodology, SEM image selection criteria, segmented image selection criteria, manual ImageJ analysis, code explanation, actual CSV-derived plots, appendix-derived figures, and a web-ready publication package.</p>
+  <p class="keywords"><strong>Keywords:</strong> Jordan Christopher Lyles, Jordan Lyles, fibrin clot structure, SEM image analysis, ImageJ, DiameterJ, MATLAB, Minitab, computer vision, biomedical engineering, pore area, fiber radius, segmentation validation.</p>
+  <figure class=""><img src="assets/fig01_pipeline.png" alt="Figure 1. Graphical abstract showing the automated SEM image analysis pipeline developed for the project."><figcaption>Figure 1. Graphical abstract showing the automated SEM image analysis pipeline developed for the project.</figcaption></figure>
+</section>
+
+<section id="summary" class="pagebreak-before">
+  <h2>Executive Summary</h2>
+  <p><strong>Objective.</strong> Develop and validate a reproducible pipeline for quantifying fibrin clot microstructure from SEM images using manual measurements, automated segmentation, data conversion, and statistical validation.</p>
+  <p><strong>Why this matters.</strong> Fibrin network morphology is not just visual texture. Fiber radius, pore area, branching, and density can influence permeability, mechanical behavior, and susceptibility to clot breakdown. A rigorous image-analysis workflow can turn high-resolution micrographs into quantitative engineering data.</p>
+  <p><strong>Primary engineering contribution.</strong> The project evaluated whether automated segmentation outputs could approximate manual ImageJ measurements. It also converted exported histogram-frequency data into observation-level arrays with MATLAB, enabling formal statistical comparison between automated outputs and manual controls.</p>
+  <div class="outcomes"><b>Key outcomes:</b><ul><li>48 SEM images screened and 16 selected for validation based on image-quality criteria.</li><li>Automated outputs were compared against manual ImageJ controls using ANOVA/Dunnett-style logic.</li><li>Traditional segmentation performed best overall, with the strongest radius performance and a tie for pore-area validation.</li><li>The final package connects SEM imaging, computer vision, MATLAB data conversion, and statistical validation into one reproducible workflow.</li></ul></div>
+  <figure class=""><img src="assets/fig02_key_findings_dashboard.png" alt="Figure 2. Executive summary dashboard of dataset size, algorithm comparison, validation approach, and final interpretation."><figcaption>Figure 2. Executive summary dashboard of dataset size, algorithm comparison, validation approach, and final interpretation.</figcaption></figure>
+</section>
+
+<section id="background" class="pagebreak-before">
+  <h2>1. Background and Research Motivation</h2>
+  <p>Hemostasis prevents blood loss after injury while preserving normal circulation. Primary hemostasis involves platelet adhesion and aggregation, while secondary hemostasis produces a fibrin-rich network that stabilizes the clot. Thrombin converts soluble fibrinogen into insoluble fibrin, and fibrin monomers assemble into protofibrils, fibers, and eventually a cross-linked three-dimensional network. That network is not simply a passive scaffold: its fiber diameter, pore morphology, branching density, and spatial organization influence the clot's mechanical behavior and biological performance.</p>
+  <p>Fibrin networks are mechanically complex biomaterials. They are porous, extensible, compressible, and viscoelastic. Dense networks with thinner fibers and smaller pores are often associated with reduced permeability and greater resistance to fibrinolysis, whereas looser networks with thicker fibers and larger pores may be more permeable and more susceptible to lysis. Because clot microstructure can reflect and influence clot stability, thrombosis, and fibrinolytic response, quantitative measurement of fibrin architecture is a meaningful biomedical engineering problem [3], [5], [7], [8].</p>
+  <p>SEM provides high-resolution visualization of fibrin networks, but SEM images alone are qualitative. Human observers can describe whether a network appears dense or loose, but automated and statistical methods are needed to transform visual morphology into reproducible measurements. The central gap addressed by this project is the gap between high-resolution visualization and reliable quantification.</p>
+  <div class="callout"><strong>Core research question:</strong> Can automated segmentation algorithms quantify fibrin network morphology from SEM images with enough agreement to reduce reliance on manual measurement?</div>
+</section>
+
+<section class="pagebreak-before">
+  <h2>2. Literature-Informed Design</h2>
+  <p>The project design was informed by three groups of literature. First, fibrin structure literature establishes that clot morphology is biologically meaningful. Variables such as thrombin concentration, fibrinogen concentration, pH, ionic strength, and calcium concentration influence fibrin formation, network density, and fibrinolytic susceptibility [7], [8], [11]. Second, SEM image-analysis literature shows that fiber diameter, porosity, intersection density, and branch length can be quantified from segmented images [2], [3]. Third, measurement-precision literature emphasizes that manual fiber measurement is susceptible to operator selection bias and that training, standard criteria, and automation can improve reproducibility [1].</p>
+  <p>DiameterJ was selected because it provides an ImageJ-based pathway for segmenting grayscale SEM images into binary fiber/background images and extracting structural descriptors such as fiber diameter and pore properties. However, automated outputs are only valid if segmentation preserves real morphology. This is why the project did not simply run automated software; it compared automated outputs to manual controls and developed selection criteria for segmentation quality.</p>
+  <table class="data"><thead><tr><th>Literature theme</th><th>Project implication</th></tr></thead><tbody><tr><td>Fibrin morphology relates to permeability, stiffness, and fibrinolysis.</td><td>Quantifying pore area and fiber radius is scientifically meaningful.</td></tr><tr><td>Manual SEM measurement is accepted but slow and operator-dependent.</td><td>Manual ImageJ measurement can serve as a control, but automation is needed for scale.</td></tr><tr><td>Segmentation quality strongly affects image-analysis output.</td><td>Algorithm outputs must be visually screened and statistically validated.</td></tr><tr><td>Histogram outputs are common in image-analysis tools.</td><td>MATLAB conversion was needed to expand histogram frequencies into analyzable vectors.</td></tr></tbody></table>
+</section>
+
+<section id="methods" class="pagebreak-before">
+  <h2>3. Experimental Design and Workflow</h2>
+  <p>The study began with 48 SEM images. Sixteen images were selected for analysis after screening for magnification, focus, fiber visibility, contrast balance, background noise, and fiber density. Images at 2000x to 10000x magnification were prioritized because individual fibrin strands were visible enough for manual and automated analysis. Cropped images were used when full fields introduced excessive noise, background artifacts, or regions unlikely to produce reliable segmentation.</p>
+  <p>Each selected image was analyzed in two parallel ways. The manual pathway used ImageJ to establish the control measurements. The automated pathway used DiameterJ to generate multiple segmentation outputs from Mixed, Statistical, and Traditional algorithm families. The project then selected one representative segmentation from each family based on visual criteria. The final selected images were analyzed for fiber radius and pore morphology.</p>
+  <table class="data"><thead><tr><th>Stage</th><th>Implementation</th><th>Why it mattered</th></tr></thead><tbody><tr><td>Image calibration</td><td>Scale was set so pixel measurements could be converted into micrometer-based units.</td><td>Enabled quantitative comparison across images.</td></tr><tr><td>Manual pore measurement</td><td>Freehand selection was used to trace enclosed pores that were not part of the image border.</td><td>Created a manual baseline for pore area.</td></tr><tr><td>Manual radius measurement</td><td>Straight-line measurements were taken perpendicular to fiber direction; diameter values were divided by two.</td><td>Created a manual baseline for fiber radius.</td></tr><tr><td>Automated segmentation</td><td>Mixed, Statistical, and Traditional families generated candidate binary segmentations.</td><td>Allowed comparison of competing computer vision outputs.</td></tr><tr><td>Data conversion</td><td>MATLAB expanded exported histogram-frequency data into observation-level arrays.</td><td>Prepared automated outputs for statistical testing.</td></tr><tr><td>Statistical validation</td><td>ANOVA and Dunnett-style interpretation compared automated methods against manual controls.</td><td>Identified the most reliable segmentation family.</td></tr></tbody></table>
+</section>
+
+<section class="pagebreak-before">
+  <h2>3.1 SEM Image Selection Criteria</h2>
+  <p>The quality of the SEM image was the first determinant of whether the automated workflow could produce meaningful data. A segmentation algorithm cannot reliably recover morphological information that is absent, blurred, distorted, or obscured in the original image. For that reason, the project developed screening criteria before algorithm comparison. The final selected images prioritized high magnification, sharp fiber edges, limited background noise, uniform brightness and contrast, visible individual fibers, and representative fiber density.</p>
+  <p>Image quality was especially important because poor contrast or fiber overlap can alter both measured pore area and measured fiber radius. Large gaps between fibers may cause the software to interpret background as part of the fiber network, while excessive overlap can merge nearby fibers into a single region. The best candidate images were those in which fiber boundaries were distinguishable and the field of view reflected a dense, representative network.</p>
+  <figure class=""><img src="assets/fig03_sem_image_selection_criteria.png" alt="Figure 3. SEM image quality assessment framework reconstructed from the project criteria and example micrographs. High-quality images were preferred because they produced clearer segmentation and more reliable manual measurements."><figcaption>Figure 3. SEM image quality assessment framework reconstructed from the project criteria and example micrographs. High-quality images were preferred because they produced clearer segmentation and more reliable manual measurements.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>3.2 Segmented Image Criteria for Selection</h2>
+  <p>After initial image screening, each selected SEM image produced multiple candidate binary segmentations. The segmentation step converted grayscale fiber networks into black-and-white images in which fibers could be measured computationally. This transformation was necessary for automated quantification but also introduced the risk of artifacts. Therefore, segmentation outputs were not accepted automatically.</p>
+  <p>Each candidate segmentation was evaluated using a visual rubric. Acceptable outputs preserved continuous fibers, avoided black spots at fiber intersections, limited partial fiber breakage, represented actual fibers rather than background artifacts, and maintained fiber widths similar to the source image. Rejected outputs included over-segmentation, under-segmentation, merged fibers, false pore detection, and skeletonization artifacts. The selected output from each algorithm family was the one that best preserved the original network morphology.</p>
+  <figure class=""><img src="assets/fig04_segmentation_selection_criteria.png" alt="Figure 4. Segmented image selection criteria. The left panel summarizes the original quality rubric; the upper-right panel shows actual candidate segmentations generated during the project; the lower panels summarize acceptable and rejected segmentation characteristics."><figcaption>Figure 4. Segmented image selection criteria. The left panel summarizes the original quality rubric; the upper-right panel shows actual candidate segmentations generated during the project; the lower panels summarize acceptable and rejected segmentation characteristics.</figcaption></figure>
+</section>
+
+<section id="manual" class="pagebreak-before">
+  <h2>3.3 Manual Image Analysis (ImageJ)</h2>
+  <p>Manual ImageJ measurements served as the control group for the entire validation study. This choice was important because the objective was not simply to generate automated measurements; the objective was to determine whether automated measurements were sufficiently similar to a trained manual baseline. The manual pathway required scale calibration, brightness/contrast adjustment, pore tracing, fiber radius measurement, and data export.</p>
+  <p>For pore measurement, only fully enclosed pores were traced. Regions connected to the edge of the image were excluded because they could not be confidently bounded. For fiber radius measurement, fibers were measured perpendicular to the fiber direction to approximate the local diameter. The measured diameter values were divided by two to obtain radius values, which were then compared against automated radius outputs.</p>
+  <p>The manual process was intentionally conservative. It reduced some of the computational errors seen in poor segmentations, but it also introduced human labor and potential observer bias. This tradeoff is precisely why the manual results were treated as a validation baseline rather than a scalable long-term solution.</p>
+  <figure class=""><img src="assets/fig05_manual_imagej_workflow.png" alt="Figure 5. Manual ImageJ analysis workflow reconstructed from Appendix F screenshots. Manual pore and radius measurements established the control data used in statistical validation."><figcaption>Figure 5. Manual ImageJ analysis workflow reconstructed from Appendix F screenshots. Manual pore and radius measurements established the control data used in statistical validation.</figcaption></figure>
+  <table class="data"><thead><tr><th>Manual task</th><th>Tool or action</th><th>Control value produced</th></tr></thead><tbody><tr><td>Scale calibration</td><td>Set scale using image scale bar and pixel-to-micrometer conversion.</td><td>Comparable physical units across images.</td></tr><tr><td>Brightness/contrast adjustment</td><td>Adjust image visibility while preserving actual fiber structure.</td><td>Clearer manual identification of fibers and pores.</td></tr><tr><td>Pore tracing</td><td>Freehand selection of enclosed pores.</td><td>Manual pore area distribution.</td></tr><tr><td>Fiber measurement</td><td>Straight-line measurements perpendicular to fiber axis.</td><td>Manual radius distribution after diameter-to-radius conversion.</td></tr><tr><td>Data export</td><td>Export measured results for spreadsheet and statistical analysis.</td><td>Manual control columns for ANOVA/Dunnett comparison.</td></tr></tbody></table>
+</section>
+
+<section id="figures" class="pagebreak-before">
+  <h2>4. Actual Image Processing Outputs</h2>
+  <p>The figures below use actual images and exported outputs from the project. They show how the same cropped SEM image was interpreted by different segmentation families and how DiameterJ converted a binary network into skeleton, fiber, radius, and pore outputs.</p>
+  <figure class=""><img src="assets/fig06_actual_algorithm_comparison.png" alt="Figure 6. Actual SEM Image 7 Cropped algorithm output comparison. Each panel includes segmentation, skeletonization, fiber interpretation, and pore detection."><figcaption>Figure 6. Actual SEM Image 7 Cropped algorithm output comparison. Each panel includes segmentation, skeletonization, fiber interpretation, and pore detection.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>4.1 Binary Segmentation and Radius Mapping</h2>
+  <p>The automated pathway begins with binary segmentation, but it does not end there. After segmentation, the software skeletonizes the fiber network, extracts branch lengths, identifies pore regions, and generates radius histograms. Comparing these outputs across segmentation families provides a direct view of how algorithm choice influences downstream measurements.</p>
+  <figure class=""><img src="assets/fig07_binary_segmentations.png" alt="Figure 7. Actual binary segmentations selected for the Mixed, Statistical, and Traditional algorithm families."><figcaption>Figure 7. Actual binary segmentations selected for the Mixed, Statistical, and Traditional algorithm families.</figcaption></figure>
+  <figure class=""><img src="assets/fig08_radius_maps.png" alt="Figure 8. Actual radius mapping outputs from selected segmentations."><figcaption>Figure 8. Actual radius mapping outputs from selected segmentations.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>5. Data Figures from Actual CSV Exports</h2>
+  <p>SEM Image 7 Cropped was provided with actual CSV exports, including radius histograms, pore data, branch lengths, and total summary files. These figures were regenerated directly from those data files.</p>
+  <figure class=""><img src="assets/fig09_radius_histogram.png" alt="Figure 9. Radius histogram outputs from actual SEM Image 7 Cropped CSV files."><figcaption>Figure 9. Radius histogram outputs from actual SEM Image 7 Cropped CSV files.</figcaption></figure>
+  <figure class=""><img src="assets/fig10_pore_boxplot.png" alt="Figure 10. Pore area distributions from actual SEM Image 7 Cropped pore data files."><figcaption>Figure 10. Pore area distributions from actual SEM Image 7 Cropped pore data files.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>5.1 Skeleton and Summary Metrics</h2>
+  <p>Skeleton branch length and summary statistics provided additional descriptions of network topology. These outputs helped evaluate whether the segmentation preserved enough structure to support pore and fiber measurements.</p>
+  <figure class=""><img src="assets/fig11_branch_length_distribution.png" alt="Figure 11. Skeleton branch-length distributions from actual exported skeleton data."><figcaption>Figure 11. Skeleton branch-length distributions from actual exported skeleton data.</figcaption></figure>
+  <figure class=""><img src="assets/fig12_summary_metrics.png" alt="Figure 12. Total summary metrics regenerated from the actual DiameterJ summary CSV files."><figcaption>Figure 12. Total summary metrics regenerated from the actual DiameterJ summary CSV files.</figcaption></figure>
+  <h3>SEM Image 7 Cropped summary table</h3>
+  <table class="data"><thead><tr><th>Segmentation</th><th>Radius mean (um)</th><th>Radius SD (um)</th><th>Mean pore area (um²)</th><th>Pore SD (um²)</th><th>Pores counted</th></tr></thead><tbody><tr><td>Mixed M5</td><td>0.1005</td><td>0.0382</td><td>0.0392</td><td>0.0550</td><td>46</td></tr><tr><td>Statistical S1</td><td>0.0898</td><td>0.0358</td><td>0.0627</td><td>0.0938</td><td>37</td></tr><tr><td>Traditional T6</td><td>0.0982</td><td>0.0362</td><td>0.0388</td><td>0.0613</td><td>47</td></tr></tbody></table>
+</section>
+
+<section id="results" class="pagebreak-before">
+  <h2>6. Aggregate Validation Results</h2>
+  <p>The aggregate project dataset compared automated outputs against manual measurements across sixteen SEM images. The final report used p-values, Dunnett grouping, and difference-of-means logic to determine which segmentation family was most similar to the manual control. Statistical and Traditional segmentations tied for pore analysis, while Traditional segmentation performed best for fiber radius. Because Traditional performed best on radius and tied on pore area, it was interpreted as the most reliable overall method.</p>
+  <figure class=""><img src="assets/fig13_results_means.png" alt="Figure 13. Manual and automated mean pore area/fiber radius across the 16-image dataset from the Results workbook."><figcaption>Figure 13. Manual and automated mean pore area/fiber radius across the 16-image dataset from the Results workbook.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>6.1 Algorithm Ranking and Validation Matrix</h2>
+  <p>The validation tally reflects the original interpretation method used in the project report. A secondary closest-mean check is included as a descriptive comparison but does not replace the project logic, which relied on p-values, Dunnett grouping, and difference of means relative to the manual control.</p>
+  <figure class=""><img src="assets/fig14_algorithm_tallies.png" alt="Figure 14. Aggregate algorithm tallies across the full dataset. The report validation tally reflects the original interpretation; the closest-mean check provides an additional descriptive comparison."><figcaption>Figure 14. Aggregate algorithm tallies across the full dataset. The report validation tally reflects the original interpretation; the closest-mean check provides an additional descriptive comparison.</figcaption></figure>
+  <figure class=""><img src="assets/fig15_pvalue_heatmap.png" alt="Figure 15. Statistical validation matrix from the original project p-value table."><figcaption>Figure 15. Statistical validation matrix from the original project p-value table.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>6.2 Interpretation of Algorithm Behavior</h2>
+  <p>Fiber radius was more stable than pore area because radius is a local measurement taken across individual fibers. Pore area is a network-level measurement that depends on complete enclosure, segmentation continuity, and correct distinction between background and true pore space. Small breaks in a fiber boundary can split or eliminate pores, while merged fibers can create false boundaries. This explains why pore analysis showed greater variability and why multiple algorithm families performed well depending on image structure.</p>
+  <p>The Traditional algorithm family was interpreted as strongest overall because it performed best for radius and tied for pore analysis. This result does not mean that the other families were unusable. Instead, it suggests that algorithm choice should be matched to image quality, fiber density, and the measurement being prioritized. A future automated tool could use image-quality scoring to recommend the best segmentation family before analysis begins.</p>
+</section>
+
+<section id="code" class="pagebreak-before">
+  <h2>7. Code and Data Engineering</h2>
+  <p>A key engineering contribution was the conversion of radius histogram outputs into observation-level data. The code below repeats each radius value according to the frequency exported from the image-analysis software. This allowed the data to be pasted into statistical software as a direct comparison group rather than only a summary distribution.</p>
+  <pre class="code"><code>% Excerpt from Radius_Conversion.m
+% Convert radius histograms into observation-level vectors.
+% Each radius value is repeated according to its exported frequency.
+
+SEM7_M5_final_array = get_array(SEM7_M5)&#x27;;
+SEM7_S1_final_array = get_array(SEM7_S1)&#x27;;
+SEM7_T6_final_array = get_array(SEM7_T6)&#x27;;
+
+function [true_array] = get_array(array)
+    true_array = [0];
+    for i = 1:length(array)
+        num_indices = array(2,i);
+        value = array(1,i);
+        for j = 1:num_indices
+            true_array(end+1) = value;
+        end
+    end
+end</code></pre>
+  <p>This conversion step matters because the core validation was not just visual. The project needed data structures that could support ANOVA and Dunnett-style comparisons against manual controls. Turning histogram-frequency outputs into observation-level arrays made the automated outputs statistically usable.</p>
+</section>
+
+<section class="pagebreak-before">
+  <h2>7.1 Algorithm Development Logic</h2>
+  <p>The radius conversion script solved a practical data-format problem. Automated image-analysis software exported radius measurements as histogram bins and frequencies. Statistical analysis, however, required observation-level columns where each measurement appeared as an individual value. The MATLAB function bridged those formats by expanding each radius bin according to its frequency count.</p>
+  <table class="data"><thead><tr><th>Input</th><th>Transformation</th><th>Output</th><th>Why it mattered</th></tr></thead><tbody><tr><td>Radius bin values</td><td>Read each numeric radius value from the exported histogram table.</td><td>Candidate measurement values.</td><td>Preserved the original measurement scale.</td></tr><tr><td>Frequency counts</td><td>Repeat each radius value according to its frequency.</td><td>Observation-level vector.</td><td>Reconstructed the distribution for statistical testing.</td></tr><tr><td>Expanded vector</td><td>Transpose and export for spreadsheet organization.</td><td>Column-ready dataset.</td><td>Made automated results comparable to manual measurements.</td></tr><tr><td>Manual control column</td><td>Combine with automated groups.</td><td>Statistical input table.</td><td>Enabled ANOVA and Dunnett-style comparisons.</td></tr></tbody></table>
+  <p>The programming contribution is significant because it shows that the project was not only a software demonstration. It required data engineering decisions to transform image-analysis exports into statistically valid inputs.</p>
+</section>
+
+<section class="pagebreak-before">
+  <h2>8. Statistical Validation Framework</h2>
+  <p>The manual ImageJ measurements were treated as the control group. Each automated segmentation family was compared against the control using one-way ANOVA and Dunnett-style interpretation. The null hypothesis was that the difference between the automated segmentation and the manual control was zero, meaning the automated method was statistically similar to manual measurement. The alternative hypothesis was that the automated and manual measurements differed.</p>
+  <p>The selection logic used two layers. First, if Dunnett grouping indicated similarity to the control, that segmentation family was favored. Second, when grouping did not distinguish a clear best method, the difference of means relative to the manual control was used. This approach allowed the study to select a practical algorithm even when multiple methods were statistically similar.</p>
+  <table class="data"><thead><tr><th>Validation element</th><th>Meaning</th></tr></thead><tbody><tr><td>Manual control</td><td>Baseline values measured directly in ImageJ.</td></tr><tr><td>ANOVA</td><td>Tested whether measurement groups differed in mean value.</td></tr><tr><td>Dunnett comparison</td><td>Compared each automated method against the manual control.</td></tr><tr><td>p-value greater than 0.05</td><td>Indicated no statistically detected difference from the manual control.</td></tr><tr><td>Difference of means</td><td>Used to rank methods when statistical grouping did not produce a clear winner.</td></tr></tbody></table>
+</section>
+
+<section id="manual2" class="pagebreak-before">
+  <h2>9. Appendix F Reconstruction: Technical User Manual</h2>
+  <p>Appendix F was one of the strongest parts of the original project because it transformed the analysis into a reproducible procedure. The public version reconstructs that manual as a professional workflow. The workflow starts with opening and calibrating the SEM image, continues through segmentation selection and manual measurement, and ends with MATLAB conversion and statistical validation.</p>
+  <figure class=""><img src="assets/fig19_appendix_f_user_manual_gallery.png" alt="Figure 16. User manual workflow screenshots reconstructed from Appendix F: open image, calibrate/segment, evaluate quality, measure manually, export data, convert in MATLAB, and validate in statistical software."><figcaption>Figure 16. User manual workflow screenshots reconstructed from Appendix F: open image, calibrate/segment, evaluate quality, measure manually, export data, convert in MATLAB, and validate in statistical software.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>9.1 Setup and Image Calibration</h2>
+  <p>The workflow begins by opening the SEM image in ImageJ/Fiji and calibrating the image scale so that pixel-based measurements convert into real micrometer units. Calibration is essential because both manual and automated outputs must be expressed in the same units before statistical comparison. Without calibration, radius and pore-area values would remain image-specific pixel counts rather than physical measurements.</p>
+  <p>After calibration, the image was visually inspected for focus, contrast, noise, and fiber visibility. Images that lacked distinct fiber boundaries or contained excessive overlap were less likely to produce reliable segmentation. This quality screening step protected the analysis from treating every image as equally suitable.</p>
+</section>
+
+<section class="pagebreak-before">
+  <h2>9.2 Segmentation Screening and Automated Batch Analysis</h2>
+  <p>Candidate segmentations were screened for black spots at fiber intersections, partial fibers, background artifacts, unrealistic fiber diameter, and merged overlapping fibers. The strongest segmentation was the one that most accurately preserved whole representative fibers while minimizing artifacts. Once the best segmentation from each algorithm family was selected, images were placed into a best-segmentation workflow and processed for DiameterJ outputs.</p>
+  <figure class=""><img src="assets/candidate_segmentations_394.png" alt="Figure 17. Candidate segmentation outputs from the appendix. The montage illustrates why selection criteria were necessary: the same source image can produce acceptable, poor, or very poor segmentation outputs depending on algorithm parameters."><figcaption>Figure 17. Candidate segmentation outputs from the appendix. The montage illustrates why selection criteria were necessary: the same source image can produce acceptable, poor, or very poor segmentation outputs depending on algorithm parameters.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>9.3 Manual Baseline Measurement</h2>
+  <p>Manual pore analysis used the freehand selection tool to trace enclosed pores that were not part of the image border. Manual radius analysis used straight-line measurements perpendicular to the fiber axis. Diameter measurements were converted to radius values because radius was the parameter compared against automated outputs.</p>
+  <p>The manual baseline was labor-intensive, but it gave the project an interpretive anchor. Automated outputs were not treated as correct simply because they were generated by software. They were accepted only when they approximated the manual control and satisfied segmentation-quality review.</p>
+</section>
+
+<section class="pagebreak-before">
+  <h2>10. Appendix-Derived Image Evidence</h2>
+  <p>The appendices contained far more visual evidence than the first public draft. The updated publication uses additional images from the appendices to show image screening, segmentation review, statistical output inspection, and automated feature extraction. These figures are included as a curated visual appendix rather than a raw dump of every original page.</p>
+  <figure class=""><img src="assets/fig16_appendix_gallery_sem_examples.png" alt="Figure 18. Selected cropped SEM and segmentation examples from the appendices. These examples show variation in image density, contrast, and segmentation response."><figcaption>Figure 18. Selected cropped SEM and segmentation examples from the appendices. These examples show variation in image density, contrast, and segmentation response.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>10.1 DiameterJ Output Gallery</h2>
+  <p>Each DiameterJ output collage captures multiple processing stages. The binary segmentation represents the detected fiber network; skeletonization reduces the network to centerlines; fiber interpretation identifies measurable regions; and pore detection identifies enclosed spaces after the skeleton and fiber network are processed.</p>
+  <figure class=""><img src="assets/fig18_diameterj_appendix_gallery.png" alt="Figure 19. Selected DiameterJ output collages from the appendix. Each collage captures the transformation from segmentation to skeleton, fiber interpretation, and pore identification."><figcaption>Figure 19. Selected DiameterJ output collages from the appendix. Each collage captures the transformation from segmentation to skeleton, fiber interpretation, and pore identification.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>10.2 Statistical Output Gallery</h2>
+  <p>The statistical appendices documented the quantitative validation process. Histograms, probability plots, residual plots, interval plots, and summary reports helped interpret whether automated measurements matched the manual control and whether residual behavior supported the analysis.</p>
+  <figure class=""><img src="assets/fig17_minitab_outputs_gallery.png" alt="Figure 20. Selected statistical output examples from the report appendices. These outputs supported the algorithm validation logic."><figcaption>Figure 20. Selected statistical output examples from the report appendices. These outputs supported the algorithm validation logic.</figcaption></figure>
+</section>
+
+<section class="pagebreak-before">
+  <h2>11. Discussion</h2>
+  <p>The project demonstrates a complete biomedical engineering measurement pipeline. It begins with biological motivation, proceeds through image acquisition and preprocessing, applies competing segmentation methods, transforms software exports into analyzable data, and validates automated outputs against manual controls. That sequence is what elevates the work beyond a simple image-processing exercise.</p>
+  <p>The main technical finding was that Traditional segmentation was the strongest overall method for this dataset, particularly for fiber radius. Statistical segmentation performed strongly for pore analysis, but pore area was inherently more variable because it depends on network enclosure and segmentation continuity. Mixed segmentation was useful in selected cases but was not consistently strongest across the full dataset.</p>
+  <p>The most important limitation is image quality. Blurry images, uneven contrast, dense overlap, and large gaps between fibers can cause segmentation artifacts. Some automated outputs may merge adjacent fibers or interpret background regions as fibers. For this reason, automated analysis should not be treated as a fully independent black box. A robust workflow requires quality screening, selected manual validation, and statistically grounded acceptance criteria.</p>
+</section>
+
+<section class="pagebreak-before">
+  <h2>11.1 Sources of Error and Failure Modes</h2>
+  <p>The most common failure modes were caused by image quality and segmentation behavior. Poor focus can make fiber boundaries indistinct. Uneven brightness can cause the algorithm to treat background intensity as structure. Overlapping fibers can be merged into a single artificial region. Large gaps between fibers can be interpreted as oversized pores or background artifacts. These issues are particularly important because pore area is a network-level measurement that depends on correct boundary continuity.</p>
+  <table class="data"><thead><tr><th>Error source</th><th>Effect on analysis</th><th>Mitigation</th></tr></thead><tbody><tr><td>Blur or lack of sharpness</td><td>Obscures fiber boundaries and reduces segmentation reliability.</td><td>Prioritize sharply focused images and exclude poor fields.</td></tr><tr><td>Uneven brightness/contrast</td><td>Produces false fibers or missing fiber regions after thresholding.</td><td>Use controlled contrast adjustment and image selection criteria.</td></tr><tr><td>Overlapping fibers</td><td>Merges adjacent structures and distorts pore boundaries.</td><td>Select representative regions with distinguishable fibers.</td></tr><tr><td>Large background gaps</td><td>Can be misidentified as structural pores or non-fiber regions.</td><td>Screen for densely packed, representative fiber networks.</td></tr><tr><td>Partial fibers at image borders</td><td>Biases pore and radius measurements.</td><td>Exclude border-connected pores and use crop criteria.</td></tr></tbody></table>
+</section>
+
+<section class="pagebreak-before">
+  <h2>12. Future Directions</h2>
+  <p>The next stage is to convert the validated workflow into a reproducible image-analysis package. The updated approach would include automated image-quality scoring, texture analysis, algorithm recommendation, open analysis notebooks, and machine-learning based segmentation screening. These directions build directly from the limitations identified in the project: image quality strongly affects segmentation, and manual review remains necessary unless quality can be scored automatically.</p>
+  <figure class=""><img src="assets/fig20_roadmap.png" alt="Figure 21. Roadmap for turning the validated workflow into a reproducible image-analysis project."><figcaption>Figure 21. Roadmap for turning the validated workflow into a reproducible image-analysis project.</figcaption></figure>
+  <h3>12.1 Automated quality scoring</h3>
+  <p>The next implementation should automatically score image quality before segmentation. Candidate metrics include sharpness, signal-to-background contrast, local brightness uniformity, edge artifacts, percent fiber coverage, and degree of overlap. Images below a quality threshold could be excluded before wasting time on segmentation.</p>
+  <h3>12.2 Texture analysis</h3>
+  <p>Texture features such as contrast, energy, homogeneity, entropy, and correlation could be calculated from grayscale images before binarization. These features may capture network organization that pore area and fiber radius alone do not fully describe [4], [6].</p>
+  <h3>12.3 Machine learning classifier</h3>
+  <p>With more labeled data, a classifier could predict which segmentation output is most likely to match manual measurements. A second classifier could identify poor segmentations. The current project already supplies a labeled structure: selected segmentations, rejected outputs, manual controls, and statistical outcomes.</p>
+</section>
+
+<section class="pagebreak-before">
+  <h2>13. Conclusion</h2>
+  <p>This project developed and validated an automated SEM image-analysis workflow for quantifying fibrin clot microstructure. It used manual ImageJ measurement as a control, evaluated multiple segmentation families, converted histogram outputs into observation-level arrays with MATLAB, and compared automated outputs using statistical validation. The strongest overall interpretation favored Traditional segmentation, especially for fiber radius, while pore area analysis showed greater variability and a tie between Statistical and Traditional segmentation.</p>
+  <p>As a professional portfolio publication, the work demonstrates Jordan Christopher Lyles' experience in biomedical engineering, computer vision, image segmentation, MATLAB programming, quantitative microscopy, technical documentation, and statistical validation. The final presentation is suitable for a personal website, a downloadable PDF publication, and a companion GitHub repository.</p>
+  <h3>Recommended GitHub repository layout</h3>
+  <pre class="code"><code>fibrin-clot-sem-image-analysis/
+  README.md
+  publication/
+    jordan_christopher_lyles_fibrin_clot_publication.pdf
+  web/
+    index.html
+    assets/
+  code/
+    Radius_Conversion.m
+    radius_conversion_excerpt.m
+  data/
+    SEM_IMAGE_7_Cropped_M5_Radius Histo.csv
+    SEM_IMAGE_7_Cropped_M5_Pore Data.csv
+    SEM_IMAGE_7_Cropped_S1_Radius Histo.csv
+    SEM_IMAGE_7_Cropped_T6_Radius Histo.csv
+  figures/
+    algorithm_comparison.png
+    radius_histogram.png
+    pvalue_heatmap.png</code></pre>
+</section>
+
+<section id="references" class="pagebreak-before">
+  <h2>References</h2>
+  <ol class="refs"><li>N. A. Hotaling et al., &quot;Training to Improve Precision and Accuracy in the Measurement of Fiber Morphology,&quot; PLOS ONE, 2016. doi:10.1371/journal.pone.0167664.</li><li>N. A. Hotaling, K. Bharti, H. Kriel, and C. G. Simon, &quot;DiameterJ: A validated open source nanofiber diameter measurement tool,&quot; Biomaterials, 2015. doi:10.1016/j.biomaterials.2015.05.015.</li><li>A. Daraei et al., &quot;Automated Fiber Diameter and Porosity Measurements of Plasma Clots in Scanning Electron Microscopy Images,&quot; Biomolecules, 2021. doi:10.3390/biom11101536.</li><li>F. Marongiu et al., &quot;Clot Characterization by Multidisciplinary Approach: Biochemical and Imaging Parameters in a Hypocoagulative Setting,&quot; Journal of Public Health Research, 2021. doi:10.4081/jphr.2021.2358.</li><li>M. Zabczyk et al., &quot;Loose Fibrin Clot Structure and Increased Susceptibility to Lysis Characterize Patients with Central Acute Pulmonary Embolism,&quot; Thrombosis and Haemostasis, 2021. doi:10.1055/s-0040-1718762.</li><li>S. A. Shah, P. Santago, and B. K. Rubin, &quot;Quantification of biopolymer filament structure,&quot; Ultramicroscopy, 2005. doi:10.1016/j.ultramic.2005.04.007.</li><li>A. S. Wolberg, &quot;Thrombin generation and fibrin clot structure,&quot; Blood Reviews, 2007. doi:10.1016/j.blre.2006.11.001.</li><li>A. S. Wolberg, &quot;Determinants of fibrin formation, structure, and function,&quot; Current Opinion in Hematology, 2012. doi:10.1097/MOH.0b013e32835673c2.</li><li>A. J. Gale, &quot;Current Understanding of Hemostasis,&quot; Toxicologic Pathology, 2011. doi:10.1177/0192623310389474.</li><li>R. Litvinov and J. Weisel, &quot;What Is the Biological and Clinical Relevance of Fibrin?&quot; Seminars in Thrombosis and Hemostasis, 2016. doi:10.1055/s-0036-1571342.</li><li>A. S. Wolberg and R. A. Campbell, &quot;Thrombin generation, fibrin clot formation and hemostasis,&quot; Transfusion and Apheresis Science, 2008. doi:10.1016/j.transci.2007.12.005.</li></ol>
+</section>
+</main>
+<footer><div>© 2026 Jordan Christopher Lyles. Public technical portfolio publication.</div></footer>
+</body></html>
